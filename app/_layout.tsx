@@ -1,56 +1,59 @@
 import Colors from '@/constants/Colors';
-import { ClerkProvider } from '@clerk/clerk-expo';
-import { Ionicons } from '@expo/vector-icons';
+import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
-import { Link, router, Stack } from 'expo-router';
+import { Link, router, Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import 'react-native-reanimated';
-import * as SecureStore from 'expo-secure-store'
+import { secureTokenCache } from '@/utils/TokenCache';
+
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+if(!CLERK_PUBLISHABLE_KEY){
+  throw new Error('Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env ')
+}
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-//Cache the Clerk JWT
-const tokenCache = {
-  async getToken(key:string){
-    try {
-      return SecureStore.getItemAsync(key)
-    } catch (error) {
-      return null;
-    }
-  },
-  async saveToken(key: string, value: string){
-    try {
-      return SecureStore.setItemAsync(key,value);
-    } catch (error) {
-      
-    }
-  }
-}
-
 function InitialLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    ...FontAwesome.font,
   });
+  const router = useRouter();
+  const {isLoaded, isSignedIn} = useAuth();
+  const segments = useSegments();
 
-  useEffect(() => {
-    if (loaded) {
+  useEffect(()=>{
+    if(loaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded])
+  
+  useEffect(() => {
+    console.log('isSignedIn', isSignedIn)
+    if(!isLoaded) return;
 
-  if (!loaded) {
-    return null;
+    console.log("segments: ",segments)
+    const inAuthGroup = segments[0] === '(authenticated)'
+    if(isSignedIn && !inAuthGroup){
+      router.replace('(authenticated)/(tabs)/home')
+    }else if( !isSignedIn){
+      router.replace('/');
+    }
+
+  }, [isSignedIn])
+
+  if (!loaded || !isLoaded) {
+    return <Text>Loading......</Text>;
   }
 
   return (
       <Stack initialRouteName={__DEV__ ? 'signup': 'index'}>
-        {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
-        {/* <Stack.Screen name="+not-found" /> */}
         <Stack.Screen name='index' options={{headerShown: false}} />
         <Stack.Screen name='signup' options={{
           title: '',
@@ -90,6 +93,24 @@ function InitialLayout() {
         }} />
 
         <Stack.Screen name='help' options={{title: 'Help', presentation: 'modal'}} />
+
+        <Stack.Screen name='verify/[phone]' options={{
+          title: '',
+          headerBackTitle:'',
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: Colors.background
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons name='arrow-back' size={34} color={Colors.dark} />
+            </TouchableOpacity>
+          )
+
+        }} />
+
+
+
       </Stack>
   );
 }
@@ -97,7 +118,7 @@ function InitialLayout() {
 const RootLayoutNav = () =>{
   return (
     <>
-    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY!} tokenCache={tokenCache}>
+    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} tokenCache={secureTokenCache}>
     <StatusBar style='dark' />
     <InitialLayout />
     </ClerkProvider>
