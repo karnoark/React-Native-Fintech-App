@@ -41,7 +41,7 @@ function InitialLayout() {
     console.log("segments: ",segments)
     const inAuthGroup = segments[0] === '(authenticated)'
     if(isSignedIn && !inAuthGroup){
-      router.replace('(authenticated)/(tabs)/home')
+      router.replace('/(authenticated)/(tabs)/home')
     }else if( !isSignedIn){
       router.replace('/');
     }
@@ -53,7 +53,7 @@ function InitialLayout() {
   }
 
   return (
-      <Stack initialRouteName={__DEV__ ? 'signup': 'index'}>
+      <Stack screenOptions={{headerShown: false}}>
         <Stack.Screen name='index' options={{headerShown: false}} />
         <Stack.Screen name='signup' options={{
           title: '',
