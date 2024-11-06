@@ -2,8 +2,12 @@
 const API_KEY = process.env.CRYPTO_API_KEY
 
 export async function GET(request: Request){
+    // Parse URL and get the limit query parameter
+    const url = new URL(request.url);
+    const ids = url.searchParams.get('ids') || '5';  // Default to '5' as a string
+
     const response = await fetch(
-        'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest',
+        `https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?id=${ids}`,
         {
             headers:{
                 'X-CMC_PRO_API_KEY': API_KEY!
@@ -13,6 +17,7 @@ export async function GET(request: Request){
     
     const res = await response.json();
     return Response.json(res.data)
+    // return Response.json(data)
 
 }
 
