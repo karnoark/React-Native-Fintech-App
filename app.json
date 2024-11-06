@@ -24,11 +24,14 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "server",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
+      ["expo-router",
+      {
+        "origin": "https://clanify.dev"
+      }],
       "expo-asset",
       "expo-secure-store"
     ],

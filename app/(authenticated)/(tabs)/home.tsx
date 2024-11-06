@@ -9,9 +9,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { View, Text, ScrollView, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-// import { useHeaderHeight } from '@react-navigation/elements';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 const Page = () => {
+  const headerHeight = useHeaderHeight();
   const { balance, runTransaction, transactions, clearTransactions } = useBalanceStore();
   const onAddMoney = () => {
     console.log("adding money...")
@@ -25,11 +26,11 @@ const Page = () => {
 
   return (
     <GestureHandlerRootView>
-      <SafeAreaView>
+      {/* <SafeAreaView> */}
     <ScrollView
       style={{ backgroundColor: Colors.background }}
       contentContainerStyle={{
-        // paddingTop: headerHeight,
+        paddingTop: headerHeight,
       }}>
       <View style={styles.account}>
         <View style={styles.row}>
@@ -85,7 +86,7 @@ const Page = () => {
       <Text style={defaultStyles.sectionHeader}>Widgets</Text>
       <WidgetList />
     </ScrollView>
-    </SafeAreaView>
+    {/* </SafeAreaView> */}
     </GestureHandlerRootView>
   )
 }
