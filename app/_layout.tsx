@@ -11,6 +11,7 @@ import 'react-native-reanimated';
 import { secureTokenCache } from '@/utils/TokenCache';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { UserInactivityProvider } from '@/Context/UserInactivity';
 const queryClient = new QueryClient();
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
@@ -138,8 +139,10 @@ function InitialLayout() {
       }}
       />
 
-
-
+      <Stack.Screen
+      name="(authenticated)/(modals)/lock"
+      options={{headerShown: false, animation: 'none'}}
+      />
     </Stack>
   );
 }
@@ -149,10 +152,12 @@ const RootLayoutNav = () => {
     <>
       <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} tokenCache={secureTokenCache}>
         <QueryClientProvider client={queryClient}>
+          <UserInactivityProvider>
           <GestureHandlerRootView>
             <StatusBar style='dark' />
             <InitialLayout />
           </GestureHandlerRootView>
+          </UserInactivityProvider>
         </QueryClientProvider>
       </ClerkProvider>
     </>
