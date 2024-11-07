@@ -5,7 +5,7 @@ import { Currency } from '@/interfaces/crypto';
 import Colors from '@/constants/Colors';
 import { useHeaderHeight } from '@react-navigation/elements'
 import { defaultStyles } from '@/constants/Styles';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 const Page = () => {
@@ -40,8 +40,8 @@ const Page = () => {
       <View style={defaultStyles.block}>
         {
           currencies.data?.map((currency: Currency) => (
-            <Link href={{ pathname: `/(authenticated)crypto[id]`, params: { id: currency.id } }} key={currency.id} asChild>
-              <TouchableOpacity style={{ flexDirection: 'row', gap: 24, alignItems: 'center' }}>
+            // <Link href={{ pathname: '/crypto/[id]', params: { id: currency.id } }} key={currency.id} asChild>
+              <TouchableOpacity onPress={() => router.push(`/crypto/${currency.id}`)} key={currency.id} style={{ flexDirection: 'row', gap: 24, alignItems: 'center' }}>
                   <Image source={{ uri: data?.[currency.id]?.logo }} style={{ width: 32, height: 32 }} />
                 <View style={{ flex: 1, gap: 6}} >
                   <Text style={{ fontWeight: '600', color: Colors.dark }}>{currency.name}</Text>
@@ -62,7 +62,7 @@ const Page = () => {
                   </View>
                 </View>
               </TouchableOpacity>
-            </Link>
+            // </Link>
           ))
         }
       </View>
