@@ -4,12 +4,14 @@ import { BlurView } from 'expo-blur'
 import Colors from '@/constants/Colors'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
+import { Link } from 'expo-router'
 
 const CustomHeader = () => {
   const {top} = useSafeAreaInsets();
   return (
     <BlurView intensity={80} tint='extraLight' style={{paddingTop: top}}>
       <View style={styles.container}>
+        <Link href={'/(authenticated)/(modals)/account'} asChild>
         <TouchableOpacity style={{
           width: 40,
           height: 40,
@@ -20,6 +22,7 @@ const CustomHeader = () => {
         }}>
           <Text style={{ color: '#fff', fontWeight: '500', fontSize: 16}}>MK</Text>
         </TouchableOpacity>
+        </Link>
         <View style={styles.searchSection}>
           <TextInput style={styles.input} placeholder='Search' placeholderTextColor={Colors.dark} />
           <Ionicons style={styles.searchIcon} name='search' size={20} color={Colors.dark} />
