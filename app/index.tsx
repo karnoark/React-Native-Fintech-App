@@ -6,7 +6,7 @@ import Colors from '@/constants/Colors'
 import { Link } from 'expo-router'
 import { defaultStyles } from '@/constants/Styles'
 
-const Page = () => {
+const Page : React.FC = () => {
 
     const [assets] = useAssets([require('@/assets/videos/intro.mp4')])
 
@@ -18,7 +18,7 @@ const Page = () => {
                     isLooping
                     shouldPlay
                     resizeMode={ResizeMode.COVER}
-                    source={{ uri: assets[0].uri }} style={styles.video} />
+                    source={{ uri: assets[0]?.uri }} style={styles.video} />
             )}
             <View style={{ marginTop: 80, padding: 20 }}>
                 <Text style={styles.header}>Ready to change the way you money?</Text>

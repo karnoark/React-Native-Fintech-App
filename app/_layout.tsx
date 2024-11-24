@@ -120,7 +120,7 @@ function InitialLayout() {
       options={{
         title: '',
         headerLeft: () => (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={router.back}>
             <Ionicons name='arrow-back' size={34} color={Colors.dark} />
           </TouchableOpacity>
         ),

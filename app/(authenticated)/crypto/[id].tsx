@@ -85,7 +85,9 @@ const Page = () => {
               }}
             >
               <Text style={styles.subtitle}>{data?.symbol}</Text>
-              <Image source={{ uri: data?.logo }} style={{ width: 60, height: 60 }} />
+              {data && (
+                <Image source={{ uri: data?.logo }} style={{ width: 60, height: 60 }} />
+              )}
             </View>
 
             <View style={{ flexDirection: 'row', gap: 10, margin: 12 }} >
